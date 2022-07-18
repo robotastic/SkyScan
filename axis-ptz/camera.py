@@ -44,6 +44,7 @@ cameraMoveSpeed = None
 cameraDelay = None
 cameraLead = 0 
 active = False
+Active = True
 
 object_topic = None
 flight_topic = None
@@ -244,9 +245,11 @@ def moveCamera(ip, username, password):
                     lag = datetime.now() - captureTimeout
                     logging.info(" 🚨 Capture execution time was greater that Capture Period - lag: {}".format(lag))
                     captureTimeout = datetime.now() + timedelta(milliseconds=capturePeriod)
-            time.sleep(0.005)
+            delay = 0.005
+            time.sleep(delay)
         else:
-            time.sleep(1)
+            delay = 1
+            time.sleep(delay)
 
 def update_config(config):
     global cameraZoom
@@ -342,6 +345,13 @@ def on_message_impl(client, userdata, message):
     else:
         logging.info("Message: {} Object: {} Flight: {}".format(message.topic, object_topic, flight_topic))
 
+
+def on_disconnect(client, userdata, rc):
+    global Active
+    Active = False
+    logging.error("Axis-PTZ MQTT Disconnect!")
+
+
 def main():
     global args
     global logging
@@ -357,6 +367,7 @@ def main():
     global cameraConfig
     global flight_topic
     global object_topic
+    global Active
 
     parser = argparse.ArgumentParser(description='An MQTT based camera controller')
     parser.add_argument('--lat', type=float, help="Latitude of camera")
@@ -405,15 +416,18 @@ def main():
     camera_lead = args.camera_lead
     #cameraConfig = vapix_config.CameraConfiguration(args.axis_ip, args.axis_username, args.axis_password)
 
-    threading.Thread(target=moveCamera, args=[args.axis_ip, args.axis_username, args.axis_password],daemon=True).start()
+    cameraMove = threading.Thread(target=moveCamera, args=[args.axis_ip, args.axis_username, args.axis_password],daemon=True)
+    cameraMove.start()
         # Sleep for a bit so we're not hammering the HAT with updates
-    time.sleep(0.005)
+    delay = 0.005
+    time.sleep(delay)
     flight_topic=args.mqtt_flight_topic
     object_topic = args.mqtt_object_topic
     print("connecting to MQTT broker at "+ args.mqtt_host+", channel '"+flight_topic+"'")
     client = mqtt.Client("skyscan-axis-ptz-camera-" + ID) #create new instance
 
     client.on_message=on_message #attach function to callback
+    client.on_disconnect = on_disconnect
 
     client.connect(args.mqtt_host) #connect to broker
     client.loop_start() #start the loop
@@ -427,11 +441,16 @@ def main():
     ##                Main Loop                ##
     #############################################
     timeHeartbeat = 0
-    while True:
+    while Active:
         if timeHeartbeat < time.mktime(time.gmtime()):
             timeHeartbeat = time.mktime(time.gmtime()) + 10
             client.publish("skyscan/heartbeat", "skyscan-axis-ptz-camera-"+ID+" Heartbeat", 0, False)
-        time.sleep(0.1)
+            if not cameraMove.is_alive():
+                logging.critical("Thread within Axis-PTZ has failed!  Killing container.")
+                Active=False
+                
+        delay = 0.1
+        time.sleep(delay)
 
 
 
