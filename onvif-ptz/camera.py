@@ -18,7 +18,8 @@ from requests.auth import HTTPDigestAuth
 import errno
 import paho.mqtt.client as mqtt 
 from json.decoder import JSONDecodeError
-from sensecam_control import onvif_control
+#from sensecam_control import onvif_control
+from onvif import ONVIFCamera
 import utils
 import logging
 import coloredlogs
@@ -30,7 +31,6 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, _
 
 ID = str(random.randint(1,100001))
 args = None
-camera = None
 cameraBearingCorrection = 0
 cameraElevationCorrection = 0
 cameraConfig = None
@@ -189,8 +189,11 @@ def moveCamera(ip, username, password):
     capturePeriod = 1000 # milliseconds
     moveTimeout = datetime.now()
     captureTimeout = datetime.now()
-    camera = onvif_control.CameraControl(ip, username, password)
-    camera.camera_start()
+
+    camera = ONVIFCamera(ip, 80, username, password) 
+    cameraPtz         = camera.create_ptz_service()
+    cameraMedia       = camera.create_media_service()
+    cameraImaging     = camera.create_imaging_service()
 
 
     while True:
@@ -210,6 +213,13 @@ def moveCamera(ip, username, password):
                 tilt = cameraTilt / 90
 
                 try:
+
+                    request = cameraPtz.create_type('AbsoluteMove')
+
+                    media_profile = cameraMedia.GetProfiles()[0]
+                    request.ProfileToken = media_profile.token
+                    request.Position = {'PanTilt': {'x': 0, 'y': 0}}
+                    resp = cameraPtz.AbsoluteMove(request)
                     camera.absolute_move(pan, tilt, cameraZoom)
                 except:
                     logging.info(" 🚨 Exception with Moving")   
@@ -340,7 +350,6 @@ def on_message(client, userdata, message):
 def main():
     global args
     global logging
-    global camera
     global cameraDelay
     global cameraMoveSpeed
     global cameraBearingCorrection
@@ -395,6 +404,8 @@ def main():
                                 '%(message)s')
 
     logging.info("---[ Starting %s ]---------------------------------------------" % sys.argv[0])
+    
+
     cameraDelay = args.camera_delay
     cameraMoveSpeed = args.camera_move_speed
     cameraElevationCorrection = args.camera_elevation_correction
