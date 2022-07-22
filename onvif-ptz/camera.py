@@ -218,9 +218,9 @@ def moveCamera(ip, username, password):
 
                     media_profile = cameraMedia.GetProfiles()[0]
                     request.ProfileToken = media_profile.token
-                    request.Position = {'PanTilt': {'x': 0, 'y': 0}}
+                    request.Position = {'PanTilt': {'x': pan, 'y': tilt}}
                     resp = cameraPtz.AbsoluteMove(request)
-                    camera.absolute_move(pan, tilt, cameraZoom)
+
                 except:
                     logging.info(" 🚨 Exception with Moving")   
                   
