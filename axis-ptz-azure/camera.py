@@ -132,7 +132,8 @@ def get_jpeg_request():  # 5.2.4.1
         try:
             with open(filepath, "rb") as data:
                 blob_client.upload_blob(data,overwrite=True)
-        except:
+        except Exception as e: 
+            print(e)
             logging.error(" 🚨 Exception while Uploading")
 
 
