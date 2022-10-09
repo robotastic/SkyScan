@@ -122,7 +122,7 @@ def get_jpeg_request():  # 5.2.4.1
         filename = "{}_{}_{}_{}_{}_{}_{}.jpg".format(currentPlane["icao24"], int(bearing), int(elevation), int(distance3d), datetime.now().strftime('%Y-%m-%d-%H-%M-%S'),trackId,callsign)
         filepath = "{}/{}".format(captureDir,filename)
         # Original
-        with open(filename, 'wb') as var:
+        with open(filepath, 'wb') as var:
             var.write(resp.content)
 
         # Create a blob client using the local file name as the name for the blob
