@@ -229,7 +229,7 @@ def moveCamera(ip, username, password):
                 continue
             if moveTimeout <= datetime.now():
                 calculateCameraPosition()
-                camera.absolute_move(cameraPan, cameraTilt, cameraZoom, cameraMoveSpeed)
+                camera.absolute_move(cameraPan, cameraTilt)
                 #logging.info("Moving to Pan: {} Tilt: {}".format(cameraPan, cameraTilt))
                 moveTimeout = moveTimeout + timedelta(milliseconds=movePeriod)
                 if moveTimeout <= datetime.now():
@@ -383,7 +383,6 @@ def main():
     parser.add_argument('-a', '--axis-ip', help="IP address for the Axis camera", required=True)
     parser.add_argument('-s', '--camera-move-speed', type=int, help="The speed at which the Axis will move for Pan/Tilt (0-100)", default=50)
     parser.add_argument('-d', '--camera-delay', type=float, help="How many seconds after issuing a Pan/Tilt command should a picture be taken", default=0)
-    parser.add_argument('-z', '--camera-zoom', type=int, help="The zoom setting for the camera (0-9999)", default=9999)
     parser.add_argument('-v', '--verbose',  action="store_true", help="Verbose output")
 
     args = parser.parse_args()
@@ -409,7 +408,6 @@ def main():
     #camera = vapix_control.CameraControl(args.axis_ip, args.axis_username, args.axis_password)
     cameraDelay = args.camera_delay
     cameraMoveSpeed = args.camera_move_speed
-    cameraZoom = args.camera_zoom
     camera_longitude = args.lon
     camera_latitude = args.lat
     camera_altitude = args.alt # Altitude is in METERS
