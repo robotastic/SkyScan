@@ -52,7 +52,7 @@ jobs:
           echo "Building $folder"
           echo $SUBNAME
           docker buildx build "$folder" --push \
-          --tag iqtlabs/$PROJECT_NAME-$SUBNAME:latest \
-          --tag iqtlabs/$PROJECT_NAME-$SUBNAME:${{ steps.get_tag.outputs.IMAGE_TAG }} \
+          --tag robotastic/$PROJECT_NAME-$SUBNAME:latest \
+          --tag robotastic/$PROJECT_NAME-$SUBNAME:${{ steps.get_tag.outputs.IMAGE_TAG }} \
           --platform linux/arm64,linux/amd64,linux/arm/v7 
         done
