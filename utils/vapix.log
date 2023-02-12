@@ -1,0 +1,5 @@
+INFO:root:Started
+INFO:root:Started
+INFO:root:camera_command({'pan': 289.398887013289, 'tilt': 44.934000139810415, 'zoom': None, 'speed': None})
+DEBUG:urllib3.connectionpool:Starting new HTTP connection (1): 192.168.1.74:80
+DEBUG:urllib3.connectionpool:http://192.168.1.74:80 "GET /axis-cgi/com/ptz.cgi?pan=289.398887013289&tilt=44.934000139810415&camera=1&html=no&timestamp=1666919776 HTTP/1.1" 204 0
