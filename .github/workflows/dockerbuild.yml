@@ -54,5 +54,5 @@ jobs:
           docker buildx build "$folder" --push \
           --tag iqtlabs/$PROJECT_NAME-$SUBNAME:latest \
           --tag iqtlabs/$PROJECT_NAME-$SUBNAME:${{ steps.get_tag.outputs.IMAGE_TAG }} \
-          --platform linux/arm64,linux/amd64 
+          --platform linux/arm64,linux/amd64,linux/arm/v7 
         done
