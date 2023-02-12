@@ -12,8 +12,8 @@ from astropy.time import Time
 from astropy.coordinates import SkyCoord, EarthLocation, AltAz, get_body
 
 
-LAT = 
-LON = 
+LAT = 38.9257137466864
+LON = -77.05196073298845
 UTC_OFFSET = 4
 AXIS_IP = "192.168.1.74"
 AXIS_USER = "ADMIN"
