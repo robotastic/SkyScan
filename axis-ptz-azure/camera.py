@@ -580,7 +580,7 @@ def moveCamera(ip, username, password):
                     gamma,
                     E_XYZ_to_uvw,
                 )
-                camera.absolute_move(cameraPan, cameraTilt, cameraZoom, cameraMoveSpeed)
+                camera.absolute_move(cameraPan, cameraTilt)
                 # logging.info("Moving to Pan: {} Tilt: {}".format(cameraPan, cameraTilt))
                 moveTimeout = moveTimeout + timedelta(milliseconds=movePeriod)
                 if moveTimeout <= datetime.now():
