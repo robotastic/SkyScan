@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   tracker:
-    image: iqtlabs/skyscan-tracker
+    image: ./tracker #iqtlabs/skyscan-tracker
     command: "./flighttracker.py -m mqtt -H piaware -l ${LAT} -L ${LONG} -a ${ALT} -P skyscan/planes/json -T skyscan/flight/json -M ${MIN_ELEVATION} -c ${CAMERA_LEAD}"
     volumes:
       - ./data:/data
@@ -16,7 +16,7 @@ services:
  #   build: ./onvif-ptz
  #   command: "./camera.py -m mqtt -t skyscan/flight/json -u ${AXIS_USERNAME} -p ${AXIS_PASSWORD} -a ${AXIS_IP} -z ${CAMERA_ZOOM} -s ${CAMERA_MOVE_SPEED} -d ${CAMERA_DELAY} --lat ${LAT} --lon ${LONG} --alt ${ALT} -e ${CAMERA_ELEVATION_CORRECTION} -b ${CAMERA_BEARING_CORRECTION} --conn ${CONNECTION_STRING}"
   axis-ptz:
-    image: iqtlabs/skyscan-axis-ptz
+    image: ./axiz-ptz  #iqtlabs/skyscan-axis-ptz
     command: "./camera.py -m mqtt -t skyscan/flight/json -u ${AXIS_USERNAME} -p ${AXIS_PASSWORD} -a ${AXIS_IP} -z ${CAMERA_ZOOM} -s ${CAMERA_MOVE_SPEED} -d ${CAMERA_DELAY} --lat ${LAT} --lon ${LONG} --alt ${ALT} --roll ${ROLL} --pitch ${PITCH} --yaw ${YAW}"
     volumes:
       - ./capture:/app/capture
@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
 
   piaware:
-    image: iqtlabs/skyscan-piaware
+    image: ./piaware #iqtlabs/skyscan-piaware
     tty: true
     container_name: piaware
     devices:
@@ -54,7 +54,7 @@ services:
     restart: unless-stopped
 
   notebook:
-    image: iqtlabs/skyscan-notebook-server
+    image: ./notebook-server #iqtlabs/skyscan-notebook-server
     ports:
         - "8888:8888"
     restart: unless-stopped
@@ -62,7 +62,7 @@ services:
       - mqtt
 
   mqtt:
-    image: iqtlabs/skyscan-mqtt
+    image: ./mqtt #iqtlabs/skyscan-mqtt
     ports:
         - "9001:9001"
         - "1883:1883"
