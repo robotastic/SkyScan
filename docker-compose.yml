@@ -27,7 +27,7 @@ services:
 
   axis-ptz-azure:
     build: ./axis-ptz-azure
-    command: "./camera.py -m mqtt -t skyscan/flight/json -u ${AXIS_USERNAME} -p ${AXIS_PASSWORD} -a ${AXIS_IP}  -s ${CAMERA_MOVE_SPEED} -d ${CAMERA_DELAY} --lat ${LAT} --lon ${LONG} --alt ${ALT}  --roll ${ROLL} --pitch ${PITCH} --yaw ${YAW} --conn ${CONNECTION_STRING} --capturePeriod ${CAPTURE_PERIOD}"
+    command: "./camera.py -m mqtt -t skyscan/flight/json -u ${AXIS_USERNAME} -p ${AXIS_PASSWORD} -a ${AXIS_IP}  -s ${CAMERA_MOVE_SPEED} -d ${CAMERA_DELAY} --lat ${LAT} --lon ${LONG} --alt ${ALT}  --roll ${ROLL} --pitch ${PITCH} --yaw ${YAW} --conn ${CONNECTION_STRING}" # --capturePeriod ${CAPTURE_PERIOD}"
     volumes:
       - ./capture:/app/capture
     depends_on:
