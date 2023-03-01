@@ -539,7 +539,7 @@ def calculateCameraPositionA():
 
 def moveCamera(ip, username, password):
 
-    movePeriod = 100  # milliseconds
+    movePeriod = 2000  # milliseconds
     moveTimeout = datetime.now()
     captureTimeout = datetime.now()
     camera = vapix_control.CameraControl(ip, username, password)
@@ -592,23 +592,11 @@ def moveCamera(ip, username, password):
                     )
                     moveTimeout = datetime.now() + timedelta(milliseconds=movePeriod)
 
-            if not inhibitPhotos:
-                if captureTimeout <= datetime.now():
+                if not inhibitPhotos:
                     time.sleep(cameraDelay)
                     get_jpeg_request()
-                    captureTimeout = captureTimeout + timedelta(
-                        milliseconds=capturePeriod
-                    )
-                    if captureTimeout <= datetime.now():
-                        lag = datetime.now() - captureTimeout
-                        logging.info(
-                            " 🚨 Capture execution time was greater that Capture Period - lag: {}".format(
-                                lag
-                            )
-                        )
-                        captureTimeout = datetime.now() + timedelta(
-                            milliseconds=capturePeriod
-                        )
+
+
             delay = 0.005
             time.sleep(delay)
         else:
